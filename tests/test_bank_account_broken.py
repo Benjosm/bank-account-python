@@ -1,5 +1,5 @@
 import pytest
-from bank_account import BankAccount
+from bank_account.bank_account import BankAccount
 
 def test_withdrawal_broken():
     account = BankAccount("12345")
