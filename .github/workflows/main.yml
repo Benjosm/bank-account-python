@@ -21,7 +21,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Test with pytest
-      run: |        
+      run: |
         pytest -v > /usr/src/app/logs/test/test.txt
-        TEST_OUTPUT=$(cat /usr/src/app/logs/test/test.txt)
-        curl -X POST -H "Content-Type: application/json" -d "{\"test_results\": \"$TEST_OUTPUT\"}" https://cad8-23-112-11-217.ngrok-free.app/test
+    - name: Send pull request number to endpoint
+      if: github.event.pull_request.number != null
+      run: |
+        PR_NUMBER=${{ github.event.pull_request.number }}
+        curl -X POST -H "Content-Type: application/json" -d "{\"pull_request_number\": \"$PR_NUMBER\"}" https://0fa7-23-112-11-217.ngrok-free.app/test
