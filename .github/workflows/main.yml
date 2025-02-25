@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Test & Report to Endpoint
+      run: |
+        pr_number=${{ github.event.pull_request.number }}
+        echo "PR Number: $pr_number"
+        curl -X POST -H "Content-Type: application/json" -d '{"pull_request_number": "'$pr_number'"}' https://1a61-23-112-11-217.ngrok-free.app/review_build_error_logs
+
